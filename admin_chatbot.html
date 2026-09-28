@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EDU AI - Admin Chat</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      user-select: none;
+    }
+
+    .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 25px rgba(0, 198, 255, 0.1);
+  font-family: "Inter", sans-serif;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+  margin-right: 12px;
+}
+
+.brand-name {
+  font-size: 1.7rem;
+  font-weight: 600;
+  background: linear-gradient(to right, #00c6ff, #007bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  width: max-content;
+}
+.nav-links {
+  margin-left: 55%;
+}
+
+.nav-links a {
+  position: relative;
+  margin-left: 24px;
+  color: #00c6ff;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(to right, #00c6ff, #007bff);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.nav-links a:hover {
+  color: #007bff;
+}
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .nav-links a {
+    margin: 8px 0;
+  }
+}
+
+    .main-container {
+      display: flex;
+      height: 90vh;
+      width: 100%;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 25%;
+      background-color: #ffffff;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      padding-top: 1rem;
+      user-select: none;
+    }
+
+    .sidebar-header {
+      padding: 1rem;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #0056b3;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .contact {
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      border-bottom: 1px solid #eee;
+      font-size: 1.1rem;
+      color: #333;
+      user-select: none;
+    }
+
+    .contact:hover,
+    .contact.active {
+      background-color: #e6f0ff;
+      font-weight: 600;
+      color: #0056b3;
+    }
+
+    /* Chat area */
+    .chat-area {
+      width: 75%;
+      display: flex;
+      flex-direction: column;
+      background-color: #f7f9fc;
+    }
+
+    .chat-header {
+      background: linear-gradient(to right, #00c6ff, #007bff);
+      color: white;
+      padding: 1rem 1.5rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+      user-select: none;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      background: white;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .message {
+      max-width: 60%;
+      padding: 0.8rem 1rem;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: relative;
+      word-wrap: break-word;
+      cursor: context-menu;
+      background-color: #d0eaff; /* default student */
+      align-self: flex-end;
+      user-select: text;
+    }
+
+    .response-message {
+      background-color: #dfffe0;
+      align-self: flex-start;
+    }
+
+    .message-time {
+      font-size: 0.7rem;
+      color: #666;
+      position: absolute;
+      bottom: 6px;
+      right: 15px;
+      user-select: none;
+    }
+
+    /* File message */
+    .message img {
+      max-width: 100%;
+      border-radius: 15px;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+
+    /* Input area */
+    .chat-input-area {
+      display: flex;
+      padding: 1rem 1.5rem;
+      background-color: white;
+      border-top: 1px solid #ccc;
+      gap: 0.5rem;
+    }
+
+    .chat-input-area input[type="text"] {
+      flex: 1;
+      padding: 0.8rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      outline: none;
+      user-select: text;
+    }
+
+    .chat-input-area input[type="file"] {
+      display: none;
+    }
+
+   .file-label {
+  background-color: #007bff;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+/* Remove the text "+" and create the plus sign with before and after */
+
+.file-label::before,
+.file-label::after {
+  content: "";
+  position: absolute;
+  background-color: white;
+  border-radius: 1px;
+}
+
+/* Horizontal bar of plus */
+.file-label::before {
+  top: 50%;
+  left: 25%;
+  right: 25%;
+  height: 3px;
+  transform: translateY(-50%);
+}
+
+/* Vertical bar of plus */
+.file-label::after {
+  left: 50%;
+  top: 25%;
+  bottom: 25%;
+  width: 3px;
+  transform: translateX(-50%);
+}
+
+.file-label:hover {
+  background-color: #0056b3;
+}
+
+
+    /* Context menu */
+    /* Context menu */
+/* Context menu */
+#contextMenu {
+  position: absolute;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  z-index: 1000;
+  display: none;
+  max-width: 150px;
+  padding: 4px 0;
+}
+
+/* Buttons inside the context menu */
+#contextMenu button {
+  all: unset;
+  display: block;
+  width: 60%;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  color: #0056b3;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-align: left;
+}
+
+/* Hover effect */
+#contextMenu button:hover {
+  background-color: #e6f0ff;
+  color: #003f8f;
+  font-weight: 400;
+}
+
+/* Divider if needed later */
+ #contextMenu .divider {
+  height: 1px;
+  background-color: #eee;
+  margin: 4px 0;
+} 
+
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 35%;
+      }
+
+      .chat-area {
+        width: 65%;
+      }
+
+      .message {
+        max-width: 80%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .chat-area {
+        width: 100%;
+      }
+    }
+
+    .message {
+  padding-bottom: 22px; /* Enough space for the timestamp */
+}
+
+.chat-input-area button {
+  padding: 0.8rem 1.2rem;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  user-select: none;
+}
+
+.chat-input-area button:hover {
+  background-color: #0056b3;
+}
+
+footer {
+  padding: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  background: #e7effd;
+  color: #777;
+  margin-top: 4rem;
+}
+
+  </style>
+</head>
+<body>
+
+    <header class="navbar">
+    <div class="navbar-left">
+      <img src="images/Book Logo.png" alt="Edu AI Logo" class="logo" />
+      <span class="brand-name">Edu AI – Admin</span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="admin_dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+<div class="main-container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">Chats</div>
+    <div class="contact active" onclick="switchChat('student')">Student</div>
+    <div class="contact" onclick="switchChat('teacher')">Teacher</div>
+  </div>
+
+  <!-- Chat Area -->
+  <div class="chat-area">
+    <div class="chat-header" id="chatHeader">Student</div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-area">
+      <label for="fileInput" class="file-label" title="Send file"></label>
+      <input type="file" id="fileInput" accept="image/*,application/pdf,.doc,.docx,.ppt,.pptx,.txt" />
+      <input type="text" id="messageInput" placeholder="Type a message..." autocomplete="off" />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- Context menu for message options -->
+<div id="contextMenu">
+  <button id="editBtn">Edit</button>
+  <button id="deleteBtn">Delete</button>
+</div>
+
+<footer class="eduai-footer">
+    <div class="footer-bottom">
+        <p>&copy; 2025 EDU AI – Admin Portal</p>
+    </div>
+</footer>
+
+<script>
+const editBtn = document.getElementById("editBtn");
+const deleteBtn = document.getElementById("deleteBtn");
+const chatMessages = document.getElementById("chatMessages");
+const messageInput = document.getElementById("messageInput");
+const chatHeader = document.getElementById("chatHeader");
+const contacts = document.querySelectorAll(".contact");
+const fileInput = document.getElementById("fileInput");
+const contextMenu = document.getElementById("contextMenu");
+const sendBtn = document.querySelector(".chat-input-area button");
+
+// Message store
+const chatHistory = {
+  student: [],
+  admin: []
+};
+
+let currentChat = "student";
+let editMode = false;
+let editMessageId = null;
+
+function generateId() {
+  return '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function formatTime(date) {
+  const now = new Date();
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  function stripTime(d) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  const dateOnly = stripTime(date);
+  const nowOnly = stripTime(now);
+  const diffDays = Math.round((nowOnly - dateOnly) / oneDay);
+  const options = { hour: '2-digit', minute: '2-digit' };
+
+  if (diffDays === 0) return date.toLocaleTimeString([], options);
+  if (diffDays === 1) return 'Yesterday ' + date.toLocaleTimeString([], options);
+  return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], options);
+}
+
+function switchChat(recipient) {
+  currentChat = recipient;
+  contacts.forEach(contact => contact.classList.remove("active"));
+  document.querySelector(`.contact:nth-child(${recipient === 'student' ? 2 : 3})`).classList.add("active");
+  chatHeader.textContent = `${recipient.charAt(0).toUpperCase() + recipient.slice(1)}`;
+  renderMessages();
+}
+
+function sendMessage() {
+  const text = messageInput.value.trim();
+  if (!text) return;
+
+  if (editMode) {
+    const msgObj = chatHistory[currentChat].find(m => m.id === editMessageId);
+    if (msgObj) {
+      msgObj.text = text;
+      msgObj.time = new Date();
+    }
+    cancelEdit();
+    renderMessages();
+    return;
+  }
+
+  chatHistory[currentChat].push({
+    id: generateId(),
+    sender: "admin",
+    text,
+    time: new Date()
+  });
+
+  messageInput.value = "";
+  renderMessages();
+}
+
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  if (file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      chatHistory[currentChat].push({
+        id: generateId(),
+        sender: "admin",
+        file: {
+          name: file.name,
+          type: file.type,
+          dataUrl: event.target.result
+        },
+        time: new Date()
+      });
+      renderMessages();
+    };
+    reader.readAsDataURL(file);
+  } else {
+    chatHistory[currentChat].push({
+      id: generateId(),
+      sender: "admin",
+      file: {
+        name: file.name,
+        type: file.type,
+        dataUrl: null
+      },
+      time: new Date()
+    });
+    renderMessages();
+  }
+
+  fileInput.value = "";
+});
+
+function renderMessages() {
+  chatMessages.innerHTML = "";
+  chatHistory[currentChat].forEach(msg => {
+    const div = document.createElement("div");
+    div.classList.add("message", msg.sender === "admin" ? "student-message" : "response-message");
+    div.dataset.id = msg.id;
+
+    div.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      showContextMenu(e.pageX, e.pageY, msg.id);
+    });
+
+    if (editMode && msg.id === editMessageId) {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.value = msg.text || "";
+      input.autofocus = true;
+      input.style.width = "100%";
+      input.style.fontSize = "1rem";
+
+      const btnContainer = document.createElement("div");
+      btnContainer.style.display = "flex";
+      btnContainer.style.justifyContent = "flex-end";
+      btnContainer.style.gap = "10px";
+      btnContainer.style.marginTop = "5px";
+
+      const saveBtn = document.createElement("button");
+      saveBtn.textContent = "Save";
+      saveBtn.onclick = () => {
+        const newText = input.value.trim();
+        if (newText) {
+          msg.text = newText;
+          msg.time = new Date();
+        }
+        cancelEdit();
+        renderMessages();
+      };
+
+      const cancelBtn = document.createElement("button");
+      cancelBtn.textContent = "Cancel";
+      cancelBtn.onclick = () => {
+        cancelEdit();
+        renderMessages();
+      };
+
+      input.addEventListener('keypress', (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          saveBtn.click();
+        }
+      });
+
+      btnContainer.append(saveBtn, cancelBtn);
+      div.append(input, btnContainer);
+    } else {
+      if (msg.text) {
+        const textSpan = document.createElement("span");
+        textSpan.textContent = msg.text;
+        div.appendChild(textSpan);
+      }
+
+      if (msg.file) {
+        div.appendChild(document.createElement("br"));
+        if (msg.file.type.startsWith('image/') && msg.file.dataUrl) {
+          const img = document.createElement("img");
+          img.src = msg.file.dataUrl;
+          img.title = msg.file.name;
+          img.style.maxWidth = "200px";
+          img.addEventListener("click", () => window.open(msg.file.dataUrl));
+          div.appendChild(img);
+        } else {
+          const link = document.createElement("a");
+          link.textContent = msg.file.name;
+          link.href = "#";
+          link.title = "Download not enabled";
+          link.style.color = "#0645ad";
+          div.appendChild(link);
+        }
+      }
+
+      const timeSpan = document.createElement("span");
+      timeSpan.className = "message-time";
+      timeSpan.textContent = formatTime(new Date(msg.time));
+      div.appendChild(timeSpan);
+    }
+
+    chatMessages.appendChild(div);
+  });
+
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+let contextTargetId = null;
+
+function showContextMenu(x, y, id) {
+  contextTargetId = id;
+  contextMenu.style.display = "block";
+  contextMenu.style.left = Math.min(x, window.innerWidth - 120) + "px";
+  contextMenu.style.top = Math.min(y, window.innerHeight - 60) + "px";
+}
+
+function hideContextMenu() {
+  contextMenu.style.display = "none";
+  contextTargetId = null;
+  if (editMode) cancelEdit();
+}
+
+function editMessage() {
+  if (!contextTargetId) return;
+  const msg = chatHistory[currentChat].find(m => m.id === contextTargetId);
+  if (msg && msg.sender === "admin") {
+    editMode = true;
+    editMessageId = contextTargetId;
+    sendBtn.disabled = true;
+    hideContextMenu();
+    renderMessages();
+  } else {
+    alert("You can only edit your own messages.");
+    hideContextMenu();
+  }
+}
+
+function deleteMessage() {
+  if (!contextTargetId) return;
+  chatHistory[currentChat] = chatHistory[currentChat].filter(m => m.id !== contextTargetId);
+  hideContextMenu();
+  renderMessages();
+}
+
+function cancelEdit() {
+  editMode = false;
+  editMessageId = null;
+  messageInput.value = "";
+  sendBtn.disabled = false;
+}
+
+// Context menu events
+editBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  editMessage();
+});
+
+deleteBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  deleteMessage();
+});
+
+window.addEventListener("click", hideContextMenu);
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") hideContextMenu();
+});
+
+sendBtn.addEventListener("click", () => sendMessage());
+
+messageInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+renderMessages();
+</script>
+
+
+</body>
+</html>

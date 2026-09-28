@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Privacy Policy – Edu AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home_page.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .policy-container {
+            max-width: 900px;
+            margin: 80px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0, 198, 255, 0.1);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .policy-container h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #00c6ff, #007bff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .policy-container h3 {
+            margin-top: 20px;
+            font-size: 1.3rem;
+            color: #007bff;
+        }
+
+        .policy-container p {
+            margin: 10px 0;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-left">
+            <img src="images/Book Logo.png" alt="Edu AI Logo" class="logo">
+            <span class="brand-name">Edu AI</span>
+        </div>
+        <nav class="nav-links" id="navMenu">
+            <a href="contact.html">Contact Us</a>
+            <a href="about.html">About Us</a>
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="registration_form.html">Sign Up</a>
+        </nav>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <div class="policy-container">
+        <h2>Privacy Policy</h2>
+        <p>Your privacy is important to us. This privacy policy explains how Edu AI collects, uses, and protects your information.</p>
+
+        <h3>1. Information Collection</h3>
+        <p>We collect information such as your name, email, and usage data to improve your learning experience.</p>
+
+        <h3>2. How We Use Data</h3>
+        <p>We use the collected data to personalize content, respond to inquiries, and enhance platform performance.</p>
+
+        <h3>3. Data Security</h3>
+        <p>We implement security measures to protect your data but cannot guarantee 100% security of any information.</p>
+
+        <h3>4. Sharing of Data</h3>
+        <p>We do not sell your personal information. Data may be shared with third-party services only to support our operations.</p>
+
+        <h3>5. Your Rights</h3>
+        <p>You have the right to access, update, or delete your data. Contact us to manage your information.</p>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("navMenu");
+            menu.classList.toggle("active");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin – Course Management | EDU AI</title>
+  <link rel="stylesheet" href="home_page.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .admin-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section1 {
+      text-align: center;
+    }
+
+    .section1 h2 {
+      font-size: 2rem;
+      color: #007bff;
+    }
+
+    .section1 p {
+      color: #555;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .stat-box {
+      background: #fff;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .cta-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .cta-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .course-card {
+      background: white;
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .course-card h3 {
+      margin: 0;
+      cursor: pointer;
+      color: #007bff;
+    }
+
+    .lesson-form {
+      display: none;
+      margin-top: 1rem;
+      background: #f9fbff;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    .lesson-form input,
+    .lesson-form textarea {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .lesson-card {
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+      background-color: #fff;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .modal-content input,
+    .modal-content textarea {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .lesson-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.lesson-table th,
+.lesson-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
+}
+
+.lesson-table th {
+  background-color: #f1f5fb;
+  font-weight: 600;
+  color: #333;
+}
+
+.lesson-table tr:hover {
+  background-color: #f9fbff;
+}
+
+.lesson-table td:last-child {
+  white-space: nowrap;
+}
+
+.lesson-table button {
+  margin-right: 6px;
+}
+
+@media screen and (max-width: 768px) {
+  .lesson-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+.stat-box { cursor: pointer; }
+.stat-box.active { outline: 2px solid #3b82f6; outline-offset: 2px; }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="navbar-left">
+      <img src="images/Book Logo.png" alt="Edu AI Logo" class="logo">
+      <span class="brand-name">EDU AI – Admin</span>
+    </div>
+    <nav class="nav-links">
+      <a href="admin_dashboard.php">Dashboard</a>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <section class="admin-container">
+    <div class="section1">
+      <h2>Course Management</h2>
+      <p>Manage all courses and add lessons for each course. Only PDF files are allowed for lessons.</p>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; gap: 1rem;">
+  <div class="stat-box" id="boxAll">
+    <h3 id="totalCourses">0</h3>
+    <p>Total Courses</p>
+  </div>
+  <div class="stat-box">
+    <h3 id="totalLessons">0</h3>
+    <p>Total Lessons</p>
+  </div>
+  <div class="stat-box" id="boxBeginner">
+    <h3 id="beginnerCourses">0</h3>
+    <p>Beginner Courses</p>
+  </div>
+  <div class="stat-box" id="boxIntermediate">
+    <h3 id="intermediateCourses">0</h3>
+    <p>Intermediate Courses</p>
+  </div>
+  <div class="stat-box" id="boxAdvanced">
+    <h3 id="advancedCourses">0</h3>
+    <p>Advanced Courses</p>
+  </div>
+</div>
+
+  <button class="cta-btn" onclick="openCourseModal()">+ Add New Course</button>
+<!-- Courses Table -->
+<table class="lesson-table" id="coursesTable" style="margin-top:1rem;">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Title</th>
+      <th>Level</th>
+      <th>Lessons</th>
+      <th>Created</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="coursesTableBody">
+    <!-- filled by JS -->
+  </tbody>
+</table>
+
+
+    <div id="courseList" style="margin-top: 2rem;"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 EDU AI – Admin Portal</p>
+  </footer>
+
+  <!-- Add Course Modal -->
+  <div id="courseModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeCourseModal()">&times;</span>
+      <h2>Add New Course</h2>
+      <form onsubmit="addCourse(event)">
+        <input type="text" id="courseTitle" placeholder="Course Title" required />
+        <textarea id="courseDescription" placeholder="Course Description" required></textarea>
+        <!-- Course Level Dropdown -->
+  <select id="courseLevel" required style="margin-bottom: 1rem; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc;">
+    <option value="">Select Course Level</option>
+    <option value="Beginner">Beginner</option>
+    <option value="Intermediate">Intermediate</option>
+    <option value="Advanced">Advanced</option>
+  </select>
+        <button type="submit" class="cta-btn">Add Course</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Course Modal -->
+<div id="editCourseModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeEditCourseModal()">&times;</span>
+    <h2>Edit Course</h2>
+    <form id="editCourseForm" onsubmit="updateCourse(event)">
+      <input type="text" id="editCourseTitle" placeholder="Course Title" required />
+      <textarea id="editCourseDescription" placeholder="Course Description" required></textarea>
+      <button type="submit" class="cta-btn">Update Course</button>
+    </form>
+  </div>
+</div>
+
+  <!-- Add this modal for Add Lesson popup -->
+<div id="lessonModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeLessonModal()">&times;</span>
+    <h2>Add Lesson</h2>
+    <form id="lessonForm" method="POST" enctype="multipart/form-data" onsubmit="submitLesson(event)">
+      <input type="text" id="lessonTitle" placeholder="Lesson Title" required />
+      <textarea id="lessonDescription" placeholder="Lesson Description" required></textarea>
+      <input type="file" accept=".pdf" id="lessonFile" required />
+      <button type="submit" class="cta-btn">Add Lesson</button>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Lesson Modal -->
+<div id="editLessonModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <h3>Edit Lesson</h3>
+    <form id="editLessonForm">
+      <input type="hidden" id="editLessonCourseIndex">
+      <input type="hidden" id="editLessonIndex">
+      <input type="hidden" id="editLessonId">
+
+      <label for="editLessonTitle">Lesson Title</label>
+      <input type="text" id="editLessonTitle" required>
+
+      <label for="editLessonDescription">Description</label>
+      <textarea id="editLessonDescription" rows="3" required></textarea>
+
+      <label for="editLessonFile">Replace PDF (optional)</label>
+      <input type="file" id="editLessonFile" accept="application/pdf">
+
+      <p class="hint" style="color:#6b7280;font-size:.9rem;">
+        Leave file empty to keep the current PDF.
+      </p>
+
+      <div class="modal-actions">
+        <button type="submit" class="cta-btn" style="background:#17a2b8">Save Changes</button>
+        <button type="button" class="cta-btn" style="background:#6c757d" onclick="closeEditLessonModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+  <!-- JavaScript -->
+  <script>
+let courses = [];
+let currentCourseIndex = null;
+let editingCourseIndex = null;
+
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));}
+
+async function loadCourses() {
+  try {
+    const res = await fetch('/edu_ai/courses_list.php', { credentials:'same-origin' });
+    const raw = await res.text();
+let data;
+try {
+  data = JSON.parse(raw);
+} catch (e) {
+  throw new Error((raw && raw.trim()) || 'Empty/invalid response from server');
+}
+
+if (!data.ok) {
+  throw new Error(data.error || 'Update failed');
+}
+    courses = data.courses || [];
+    updateStats(data.stats || {});
+    renderCourses();
+    renderCoursesTable();
+  } catch (e) {
+    console.error(e); alert('Could not load courses.');
+  }
+}
+
+function updateStats(s) {
+  document.getElementById("totalCourses").innerText = s.totalCourses ?? 0;
+  document.getElementById("totalLessons").innerText = s.totalLessons ?? 0;
+  document.getElementById("beginnerCourses").innerText = s.Beginner ?? 0;
+  document.getElementById("intermediateCourses").innerText = s.Intermediate ?? 0;
+  document.getElementById("advancedCourses").innerText = s.Advanced ?? 0;
+}
+
+// --- Filter state
+let courseFilter = 'All'; // 'All' | 'Beginner' | 'Intermediate' | 'Advanced'
+
+// Helper: return courses according to current filter
+function filteredCourses() {
+  if (courseFilter === 'All') return courses;
+  const want = courseFilter.toLowerCase();
+  return courses.filter(c => (c.level || '').toLowerCase() === want);
+}
+
+// Helper: find the real index in the full courses[] by id (so click handlers stay correct)
+function realIndexById(courseId) {
+  return courses.findIndex(c => c.id === courseId);
+}
+
+// Highlight active box (optional; no UI change if you skip CSS class)
+function highlightActiveBox() {
+  const ids = ['boxAll','boxBeginner','boxIntermediate','boxAdvanced'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const active =
+      (courseFilter === 'All'         && id === 'boxAll') ||
+      (courseFilter === 'Beginner'    && id === 'boxBeginner') ||
+      (courseFilter === 'Intermediate'&& id === 'boxIntermediate') ||
+      (courseFilter === 'Advanced'    && id === 'boxAdvanced');
+    el.classList.toggle('active', !!active);
+  });
+}
+
+// Call this when clicking a box
+function setCourseFilter(level) {
+  courseFilter = level;
+  // collapse any expanded course when filter changes
+  currentCourseIndex = null;
+  renderCourses();
+  renderCoursesTable();
+  highlightActiveBox();
+}
+
+// --- Replace your existing renderers with these ---
+
+function renderCourses() {
+  const container = document.getElementById("courseList");
+  container.innerHTML = "";
+
+  const list = filteredCourses();
+  list.forEach((course, idxFiltered) => {
+    const realIdx = realIndexById(course.id); // map back to original index for handlers
+    const div = document.createElement('div');
+    div.className = 'course-card';
+
+    // expanded state should be tracked by real index from original array
+    const isSelected = currentCourseIndex === realIdx;
+
+    div.innerHTML = `
+      <h3 style="cursor:pointer; color:#007bff;" onclick="toggleCourse(${realIdx})">${idxFiltered+1}. ${escapeHtml(course.title)}</h3>
+      <p>${escapeHtml(course.description)}</p>
+      <p><strong>Level:</strong> ${escapeHtml(course.level)}</p>
+      <div style="margin-top: 0.5rem;">
+        <button class="cta-btn" style="margin-right:10px;background-color:#28a745;" onclick="openEditCourse(${realIdx})">Edit</button>
+        <button class="cta-btn" style="background-color:#dc3545;" onclick="confirmDeleteCourse(${realIdx})">Delete</button>
+      </div>
+      ${isSelected ? renderLessonsSection(course, realIdx) : ''}
+    `;
+    container.appendChild(div);
+  });
+}
+
+function renderCoursesTable() {
+  const body = document.getElementById('coursesTableBody');
+  if (!body) return;
+  body.innerHTML = '';
+
+  const list = filteredCourses();
+  list.forEach((c, idxFiltered) => {
+    const realIdx = realIndexById(c.id);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${idxFiltered+1}</td>
+      <td>${escapeHtml(c.title)}</td>
+      <td>${escapeHtml(c.level)}</td>
+      <td>${(c.lessons||[]).length}</td>
+      <td>${escapeHtml(c.created_at || '')}</td>
+      <td class="action-buttons">
+        <button class="cta-btn" onclick="toggleCourse(${realIdx})">Open</button>
+        <button class="cta-btn" style="background:#28a745" onclick="openEditCourse(${realIdx})">Edit</button>
+        <button class="cta-btn" style="background:#dc3545" onclick="confirmDeleteCourse(${realIdx})">Delete</button>
+      </td>
+    `;
+    body.appendChild(tr);
+  });
+}
+
+// --- Click handlers for the stat boxes (wire once after DOM is ready) ---
+document.addEventListener('DOMContentLoaded', () => {
+  const bAll  = document.getElementById('boxAll');
+  const bBeg  = document.getElementById('boxBeginner');
+  const bInt  = document.getElementById('boxIntermediate');
+  const bAdv  = document.getElementById('boxAdvanced');
+
+  bAll  && bAll.addEventListener('click', () => setCourseFilter('All'));
+  bBeg  && bBeg.addEventListener('click', () => setCourseFilter('Beginner'));
+  bInt  && bInt.addEventListener('click', () => setCourseFilter('Intermediate'));
+  bAdv  && bAdv.addEventListener('click', () => setCourseFilter('Advanced'));
+
+  // initial highlight
+  highlightActiveBox();
+});
+
+function renderLessonsSection(course, index) {
+  const hasLessons = (course.lessons || []).length > 0;
+  const rows = (course.lessons || []).map((l,i)=>`
+  <tr>
+    <td>${i+1}</td>
+    <td>${escapeHtml(l.title)}</td>
+    <td>${escapeHtml(l.description)}</td>
+    <td>
+      <a href="/edu_ai/${encodeURI(l.file_path)}"
+        target="_blank" rel="noopener">
+        ${escapeHtml(l.file_name)}
+      </a>
+      </td>
+      <td>
+      <button class="cta-btn"
+        style="padding:4px 10px;font-size:.8rem;"
+        onclick="downloadLessonById(${l.id})">
+        Download
+      </button>
+      <button class="cta-btn" style="background:#17a2b8;padding:4px 10px;font-size:.8rem;"
+        onclick="openEditLesson(${index}, ${i})">
+        Edit
+      </button>
+      <button class="cta-btn" style="background:#dc3545;padding:4px 10px;font-size:.8rem;"
+              onclick="deleteLesson(${index}, ${l.id})">Delete</button>
+    </td>
+  </tr>
+`).join('');
+
+  return `
+    <div style="margin-top:1rem;">
+      <button class="cta-btn" onclick="openLessonModal(${index})">+ Add Lesson</button>
+    </div>
+    <div style="margin-top:1rem;">
+      ${hasLessons ? `
+        <table class="lesson-table">
+          <thead>
+            <tr><th>#</th><th>Lesson Title</th><th>Description</th><th>File</th><th>Actions</th></tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      ` : `<p style="color:#888;">No lessons added yet.</p>`}
+    </div>
+  `;
+}
+
+function toggleCourse(index) {
+  currentCourseIndex = (currentCourseIndex === index) ? null : index;
+  renderCourses();
+}
+
+function openCourseModal(){ document.getElementById('courseModal').style.display='flex'; }
+function closeCourseModal(){ document.getElementById('courseModal').style.display='none'; }
+
+async function addCourse(e){
+  e.preventDefault();
+  const title = document.getElementById("courseTitle").value.trim();
+  const description = document.getElementById("courseDescription").value.trim();
+  const level = document.getElementById("courseLevel").value;
+  if(!title || !description || !level) return alert('Please fill in all fields.');
+
+  const fd = new FormData();
+  fd.append('title', title); fd.append('description', description);
+  // Optional: request filename rename based on title
+  try {
+    const suggestedName = (title || '').trim().replace(/[^A-Za-z0-9._-]+/g, '_') + '.pdf';
+    if (suggestedName !== '.pdf') fd.append('new_file_name', suggestedName);
+  } catch (_) {}
+ fd.append('level', level);
+
+  try{
+    const res = await fetch('/edu_ai/course_create.php', {method:'POST', body:fd, credentials:'same-origin'});
+    const raw = await res.text();
+let data;
+try {
+  data = JSON.parse(raw);
+} catch (e) {
+  throw new Error((raw && raw.trim()) || 'Empty/invalid response from server');
+}
+
+if (!data.ok) {
+  throw new Error(data.error || 'Update failed');
+}
+    courses.unshift(data.course);
+    closeCourseModal();
+    renderCourses(); renderCoursesTable(); // quick update
+    loadCourses(); // refresh stats + ensure consistency
+  }catch(e){ console.error(e); alert(e.message); }
+}
+
+function openEditCourse(index){
+  editingCourseIndex = index;
+  const c = courses[index];
+  document.getElementById('editCourseTitle').value = c.title;
+  document.getElementById('editCourseDescription').value = c.description;
+  document.getElementById('editCourseModal').style.display='flex';
+}
+function closeEditCourseModal(){ document.getElementById('editCourseModal').style.display='none'; }
+
+async function updateCourse(e){
+  e.preventDefault();
+  const idx = editingCourseIndex;
+  if(idx==null) return;
+  const id = courses[idx].id;
+  const title = document.getElementById('editCourseTitle').value.trim();
+  const description = document.getElementById('editCourseDescription').value.trim();
+  if(!title || !description) return alert('Please fill in both fields.');
+
+  const fd = new FormData();
+  fd.append('id', id); fd.append('title', title); fd.append('description', description);
+  // Optional: request filename rename based on title
+  try {
+    const suggestedName = (title || '').trim().replace(/[^A-Za-z0-9._-]+/g, '_') + '.pdf';
+    if (suggestedName !== '.pdf') fd.append('new_file_name', suggestedName);
+  } catch (_) {}
+
+
+  try{
+    const res = await fetch('/edu_ai/course_update.php', {method:'POST', body:fd, credentials:'same-origin'});
+    const raw = await res.text();
+let data;
+try {
+  data = JSON.parse(raw);
+} catch (e) {
+  throw new Error((raw && raw.trim()) || 'Empty/invalid response from server');
+}
+
+if (!data.ok) {
+  throw new Error(data.error || 'Update failed');
+}
+
+    courses[idx].title = title;
+    courses[idx].description = description;
+    closeEditCourseModal();
+    renderCourses(); renderCoursesTable();
+  }catch(e){ console.error(e); alert(e.message); }
+}
+
+function confirmDeleteCourse(index){
+  const c = courses[index];
+  if(!confirm(`Delete course "${c.title}" and all its lessons?`)) return;
+  deleteCourse(index);
+}
+
+async function deleteCourse(index){
+  const id = courses[index].id;
+  const fd = new FormData(); fd.append('id', id);
+  try{
+    const res = await fetch('/edu_ai/course_delete.php', {method:'POST', body:fd, credentials:'same-origin'});
+    const raw = await res.text();
+let data;
+try {
+  data = JSON.parse(raw);
+} catch (e) {
+  throw new Error((raw && raw.trim()) || 'Empty/invalid response from server');
+}
+
+if (!data.ok) {
+  throw new Error(data.error || 'Update failed');
+}
+    courses.splice(index,1);
+    currentCourseIndex = null;
+    renderCourses(); renderCoursesTable();
+    loadCourses();
+  }catch(e){ console.error(e); alert(e.message); }
+}
+
+function openLessonModal(courseIndex){
+  currentCourseIndex = courseIndex;
+  document.getElementById('lessonTitle').value='';
+  document.getElementById('lessonDescription').value='';
+  document.getElementById('lessonFile').value='';
+  document.getElementById('lessonModal').style.display='flex';
+}
+function closeLessonModal(){ document.getElementById('lessonModal').style.display='none'; }
+
+async function submitLesson(e){
+  e.preventDefault();
+  const idx = currentCourseIndex;
+  if (idx == null) { alert('Please select a course first.'); return; }
+  const course = courses[idx];
+
+  const title = document.getElementById('lessonTitle').value.trim();
+  const description = document.getElementById('lessonDescription').value.trim();
+  const input = document.getElementById('lessonFile');
+  const file = input.files[0];
+
+  if (!title || !description || !file) {
+    alert('Please fill all fields and upload a PDF.');
+    return;
+  }
+
+  // Be permissive: some browsers report empty or octet-stream mime
+  const mime = (file.type || '').toLowerCase();
+  const name = (file.name || '').toLowerCase();
+  const looksPdf = mime === 'application/pdf' || name.endsWith('.pdf');
+  if (!looksPdf) {
+    alert('Only PDF files are allowed.');
+    return;
+  }
+
+  const fd = new FormData();
+  fd.append('course_id', course.id);
+  fd.append('title', title);
+  fd.append('description', description);
+  // Optional: request filename rename based on title
+  try {
+    const suggestedName = (title || '').trim().replace(/[^A-Za-z0-9._-]+/g, '_') + '.pdf';
+    if (suggestedName !== '.pdf') fd.append('new_file_name', suggestedName);
+  } catch (_) {}
+
+
+  // Key trick: send under BOTH keys so whatever your PHP expects will work
+  fd.append('file', file);      // if your PHP expects $_FILES['file']
+  fd.append('pdf', file);       // if your PHP expects $_FILES['pdf']
+
+  try {
+    const res  = await fetch('/edu_ai/lesson_upload.php', {
+      method: 'POST',
+      body: fd,
+      credentials: 'same-origin'
+    });
+    // Try to parse JSON; if server emitted HTML on error, catch nicely
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch { throw new Error(text || 'Upload failed'); }
+
+    if (!data.ok) throw new Error(data.error || 'Upload failed');
+
+    // Update in-memory list & UI
+    courses[idx].lessons = courses[idx].lessons || [];
+    courses[idx].lessons.unshift(data.lesson);
+    closeLessonModal();
+    renderCourses();
+    renderCoursesTable();
+    loadCourses(); // refresh totals
+  } catch (e) {
+    console.error('Lesson upload error:', e);
+    alert(e.message || 'Could not upload lesson.');
+  }
+}
+
+function downloadLessonDirect(path){
+  window.location.href = '/edu_ai/' + path;
+}
+
+async function deleteLesson(courseIndex, lessonId){
+  if(!confirm('Delete this lesson?')) return;
+  const fd = new FormData(); fd.append('id', lessonId);
+  try{
+    const res = await fetch('/edu_ai/lesson_delete.php', {method:'POST', body:fd, credentials:'same-origin'});
+    const raw = await res.text();
+let data;
+try {
+  data = JSON.parse(raw);
+} catch (e) {
+  throw new Error((raw && raw.trim()) || 'Empty/invalid response from server');
+}
+
+if (!data.ok) {
+  throw new Error(data.error || 'Update failed');
+}
+    courses[courseIndex].lessons = courses[courseIndex].lessons.filter(l => l.id !== lessonId);
+    renderCourses(); renderCoursesTable();
+    loadCourses();
+  }catch(e){ console.error(e); alert(e.message); }
+}
+
+// close modals when clicking outside
+window.onclick = function(e){
+  ['lessonModal','editCourseModal','courseModal'].forEach(id=>{
+    const m = document.getElementById(id);
+    if (e.target === m) m.style.display='none';
+  });
+};
+
+// init
+loadCourses();
+</script>
+
+<script>
+// --- Edit Lesson ---
+
+function openEditLesson(courseIndex, lessonIndex) {
+  const lesson = courses[courseIndex].lessons[lessonIndex];
+  document.getElementById('editLessonCourseIndex').value = courseIndex;
+  document.getElementById('editLessonIndex').value = lessonIndex;
+  document.getElementById('editLessonId').value = lesson.id;
+
+  document.getElementById('editLessonTitle').value = lesson.title || '';
+  document.getElementById('editLessonDescription').value = lesson.description || '';
+  document.getElementById('editLessonFile').value = ''; // clear any previous file selection
+
+  document.getElementById('editLessonModal').style.display = 'flex';
+}
+
+function closeEditLessonModal() {
+  document.getElementById('editLessonModal').style.display = 'none';
+}
+
+async function submitEditLesson(e) {
+  e.preventDefault();
+
+  const ci = parseInt(document.getElementById('editLessonCourseIndex').value, 10);
+  const li = parseInt(document.getElementById('editLessonIndex').value, 10);
+  const id = parseInt(document.getElementById('editLessonId').value, 10);
+
+  const title = document.getElementById('editLessonTitle').value.trim();
+  const description = document.getElementById('editLessonDescription').value.trim();
+  const file = document.getElementById('editLessonFile').files[0];
+
+  if (!title || !description) {
+    alert('Please provide title and description.');
+    return;
+  }
+  if (file && file.type !== 'application/pdf') {
+    alert('Only PDF files are allowed.');
+    return;
+  }
+
+  const fd = new FormData();
+  fd.append('id', id);
+  fd.append('title', title);
+  fd.append('description', description);
+  // Optional: request filename rename based on title
+  try {
+    const suggestedName = (title || '').trim().replace(/[^A-Za-z0-9._-]+/g, '_') + '.pdf';
+    if (suggestedName !== '.pdf') fd.append('new_file_name', suggestedName);
+  } catch (_) {}
+
+  if (file) fd.append('file', file); // optional replacement
+
+  try {
+    const res = await fetch('/edu_ai/lesson_update.php', { method:'POST', body: fd, credentials:'same-origin' });
+    const raw = await res.text();
+let data;
+try {
+  data = JSON.parse(raw);
+} catch (e) {
+  throw new Error((raw && raw.trim()) || 'Empty/invalid response from server');
+}
+
+if (!data.ok) {
+  throw new Error(data.error || 'Update failed');
+}
+
+    // Update local lesson data
+    const lesson = courses[ci].lessons[li];
+    lesson.title = title;
+    lesson.description = description;
+    if (data.lesson?.file_path) {
+      lesson.file_path = data.lesson.file_path;
+      lesson.file_name = data.lesson.file_name;
+      lesson.file_size = data.lesson.file_size;
+    }
+
+    closeEditLessonModal();
+    renderCourses();      // re-render the expanded course view
+    renderCoursesTable(); // refresh counts/rows
+    // Optionally full reload of data:
+    // await loadCourses();
+
+  } catch (err) {
+    console.error(err);
+    alert(err.message || 'Could not update lesson.');
+  }
+}
+
+document.getElementById('editLessonForm').addEventListener('submit', submitEditLesson);
+
+// Close modal when clicking outside
+window.addEventListener('click', (e) => {
+  const m = document.getElementById('editLessonModal');
+  if (e.target === m) m.style.display = 'none';
+});
+
+function downloadLessonById(lessonId){
+  // server will set Content-Disposition with the stored original name
+  window.location.href = '/edu_ai/download_lesson.php?id=' + encodeURIComponent(lessonId);
+}
+</script>
+
+<script>
+document.addEventListener('change', async (e) => {
+  if (!e.target.matches('input[type="file"][data-lesson-id]')) return;
+  const input = e.target;
+  const lessonId = input.dataset.lessonId;
+  const file = input.files && input.files[0];
+  if (!file || !lessonId) return;
+
+  // optional status text near the input (add <span class="upload-status"></span> in your lesson card)
+  const status = input.closest('.feature-box')?.querySelector('.upload-status');
+  if (status) { status.style.color = '#555'; status.textContent = 'Uploading…'; }
+
+  const fd = new FormData();
+  fd.append('lesson_id', lessonId);
+    // Send desired new file name (based on current title field if present)
+    try {
+      const t = document.getElementById('editLessonTitle')?.value || '';
+      const suggestedName = t.trim().replace(/[^A-Za-z0-9._-]+/g, '_') + '.pdf';
+      if (suggestedName !== '.pdf') fd.append('new_file_name', suggestedName);
+    } catch (_) {}
+
+  fd.append('file', file);
+
+  try {
+    const res = await fetch('/edu_ai/lesson_update.php', {
+      method: 'POST',
+      body: fd,
+      credentials: 'same-origin',
+      cache: 'no-store'
+    });
+
+    const raw = await res.text();
+    let data;
+    try { data = JSON.parse(raw); }
+    catch { throw new Error((raw && raw.trim()) || 'Empty/invalid response from server'); }
+
+    if (!data.ok) throw new Error(data.error || 'Update failed');
+
+    if (status) { status.style.color = '#0a7'; status.textContent = 'Lesson updated.'; }
+  } catch (err) {
+    if (status) { status.style.color = '#b00'; status.textContent = err.message || 'Upload failed.'; }
+    else alert(err.message || 'Upload failed.');
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin – View Feedback | EDU AI</title>
+  <link rel="stylesheet" href="home_page.css" /> <!-- Uses your main project style -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-left">
+      <img src="images/Book Logo.png" alt="Edu AI Logo" class="logo" />
+      <span class="brand-name">EDU AI – Admin</span>
+    </div>
+    <nav class="nav-links">
+      <a href="admin_dashboard.php">Dashboard</a>
+    </nav>
+  </header>
+
+  <section class="section">
+    <h2>User Feedback</h2>
+    <p>Total Feedback Received: <strong id="feedback-count">0</strong></p>
+
+    <div class="features" id="feedbackList" style="margin-top: 2rem;">
+      <!-- Feedback entries will be inserted here -->
+    </div>
+  </section>
+
+  <footer class="eduai-footer">
+    <div class="footer-bottom">
+        <p>&copy; 2025 EDU AI – Admin Portal</p>
+    </div>
+</footer>
+
+  <script>
+let notificationsRead = false;
+
+function renderStars(n) {
+  n = Math.max(1, Math.min(5, parseInt(n||'0',10)));
+  let html = '';
+  for (let i=1;i<=5;i++) {
+    html += `<i class="fa-${i<=n?'solid':'regular'} fa-star" style="margin-right:2px;"></i>`;
+  }
+  return html;
+}
+
+async function loadFeedback(){
+  const listContainer = document.getElementById("feedbackList");
+  const countElement  = document.getElementById("feedback-count");
+  listContainer.innerHTML = '<div class="feature-box"><p>Loading...</p></div>';
+
+  try{
+    const res  = await fetch('/edu_ai/admin_feedback_list.php', {credentials:'same-origin'});
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Failed');
+
+    countElement.textContent = data.count ?? (data.items?.length || 0);
+    listContainer.innerHTML = '';
+
+    (data.items || []).forEach(entry => {
+      const card = document.createElement("div");
+      card.classList.add("feature-box");
+      const name = entry.name || 'Unknown User';
+      const email = entry.email || 'Not provided';
+      const level = entry.study_level ? (String(entry.study_level).charAt(0).toUpperCase()+String(entry.study_level).slice(1)) : '—';
+      const message = entry.message || '';
+      const stars = renderStars(entry.rating);
+
+      card.innerHTML = `
+        <h4>${name}</h4>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Study level:</strong> ${level}</p>
+        <p><strong>Rating:</strong> ${stars}</p>
+        <p><strong>Message:</strong><br>${message}</p>
+        <p style="opacity:.7;font-size:.9rem;margin-top:.5rem;"><i class="fa-regular fa-clock"></i> ${entry.created_at || ''}</p>
+      `;
+      listContainer.appendChild(card);
+    });
+
+    if (!listContainer.children.length) {
+      listContainer.innerHTML = '<div class="feature-box"><p>No feedback yet.</p></div>';
+    }
+  }catch(e){
+    listContainer.innerHTML = `<div class="feature-box"><p style="color:#b00;">${e.message || 'Error loading feedback'}</p></div>`;
+  }
+}
+
+// keep your existing notification/settings JS (unchanged):
+let notificationsOpen=false, settingsOpen=false;
+function toggleNotifications() {
+  const notif = document.getElementById("notifDropdown");
+  const settings = document.getElementById("settingsDropdown");
+  const badge = document.getElementById("notifBadge");
+  settings.style.display = "none";
+  notif.style.display = notif.style.display === "block" ? "none" : "block";
+  if (!notificationsRead) { notificationsRead = true; badge.style.display = "none"; }
+}
+function toggleSettings() {
+  const notif = document.getElementById("notifDropdown");
+  const settings = document.getElementById("settingsDropdown");
+  notif.style.display = "none";
+  settings.style.display = settings.style.display === "block" ? "none" : "block";
+}
+window.addEventListener("click", function (event) {
+  const notifTrigger = document.querySelector(".nav-notification");
+  const settingsTrigger = document.querySelector(".nav-settings");
+  if (notifTrigger && !notifTrigger.contains(event.target)) {
+    const n = document.getElementById("notifDropdown"); if (n) n.style.display = "none";
+  }
+  if (settingsTrigger && !settingsTrigger.contains(event.target)) {
+    const s = document.getElementById("settingsDropdown"); if (s) s.style.display = "none";
+  }
+});
+
+// kick off
+document.addEventListener('DOMContentLoaded', loadFeedback);
+</script>
+
+</body>
+</html>

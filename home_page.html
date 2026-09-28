@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="home_page.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Edu AI – Home</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+        <header class="navbar">
+            <div class="navbar-left">
+                <img src="images/Book Logo.png" alt="Edu AI Logo" class="logo">
+                <span class="brand-name">Edu AI</span>
+            </div>
+            <nav class="nav-links" id="navMenu">
+                <a href="#">Home</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="about.html">About Us</a>
+                <a href="registration_form.html">Sign Up</a>
+                <a href="login_form.html">Log In</a>
+            </nav>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+        </header>
+
+        <section class="hero">
+            <div class="hero-overlay">
+                <div class="hero-content">
+                    <h1>WHERE EDUCATION MEETS INNOVATION</h1>
+                    <p>AI-powered platform that automatically generates quizzes and learning materials from your own content. Adaptive. Personalized. Instant.</p>
+                    <a href="login_form.html"><button class="cta-btn">Get Started</button></a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 2rem;">
+            <img src="images/What is EDU AI.jpg" alt="EDU AI System" style="max-width: 300px; border-radius: 16px; height: 250px;">
+            <div style="max-width: 600px; text-align: left;">
+                <h2>What is EDU AI?</h2>
+                <p class="intro">
+                    EDU AI is an intelligent e-learning system that transforms educational materials into interactive quizzes and personalized learning paths. 
+                    Using Natural Language Processing and Machine Learning, it extracts key concepts from your notes or documents and generates relevant questions 
+                    in multiple formats, saving time and delivering tailored experiences for each learner.
+                </p>
+            </div>
+        </section>
+
+        <section class="section about-section-advanced" style="padding-top: 5rem;">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 3rem;">
+                <div style="flex: 1; min-width: 300px;">
+                    <h2 style="color: #007bff; font-size: 2.2rem; margin-bottom: 1rem;">Our Mission at EDU AI</h2>
+                    <p style="font-size: 1.05rem; color: #444; line-height: 1.7; margin-bottom: 1.5rem;">
+                        At <strong>EDU AI</strong>, we believe that education shouldn’t be one-size-fits-all. That’s why we’ve created an intelligent platform that turns static documents into living, breathing learning journeys. 
+                        We empower educators to teach more and type less. We help learners focus on what matters — mastering knowledge through smart, adaptive quizzes.
+                    </p>
+                    <p style="font-size: 1.05rem; color: #444; line-height: 1.6;">
+                        From real-time feedback to personalized learning paths, everything we build is rooted in one mission: to make digital education <strong>smarter, faster, and human-centric</strong>.
+                    </p>
+                    <div style="background: #eaf4ff; padding: 1rem 1.5rem; border-left: 4px solid #007bff; border-radius: 8px; margin-top: 2rem;">
+                        <em>"AI is not here to replace teachers — it's here to elevate how we learn."</em>
+                    </div>
+                </div>
+                <div style="flex: 1; min-width: 300px; text-align: center;">
+                    <img src="images/AI Illustration.jpg" alt="AI Education Illustration" style="width: 100%; max-width: 450px; border-radius: 20px; box-shadow: 0 12px 28px rgba(0,0,0,0.1);">
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 4rem;">
+                <div class="stat-box">
+                    <h3>92%</h3>
+                    <p>Time Saved in Quiz Creation</p>
+                </div>
+                <div class="stat-box">
+                    <h3>100%</h3>
+                    <p>AI-Generated Adaptive Learning</p>
+                </div>
+                <div class="stat-box">
+                    <h3>24/7</h3>
+                    <p>Real-Time Learning Support</p>
+                </div>
+            </div>
+        </section>  
+        
+        <section class="section">
+            <h2>Why Choose EDU AI?</h2>
+            <div class="features">
+                <div class="feature-box">
+                    <img src="images/AI Quiz Generator.jpg" alt="AI Quiz Generator" style="height: 60px; margin-bottom: 1rem;">
+                    <h3>AI Quiz Generator</h3>
+                    <p>Upload any course material and instantly generate MCQs, true/false, and fill-in-the-blank questions.</p>
+                </div>
+
+                <div class="feature-box">
+                    <img src="images/Adaptive Learning.jpg" alt="Adaptive Learning" style="height: 60px; margin-bottom: 1rem;">
+                    <h3>Adaptive Learning Paths</h3>
+                    <p>Track user performance and adapt the difficulty level and topic focus automatically.</p>
+                </div>
+
+                <div class="feature-box">
+                    <img src="images/Real Time Feedback.jpg" alt="Real-Time Feedback" style="height: 60px; margin-bottom: 1rem;">
+                    <h3>Real-Time Feedback</h3>
+                    <p>Receive instant responses, explanations, and suggestions for improvement while learning.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top: 4rem;">
+            <h2 style="text-align: center;">User Progress Snapshot</h2>
+            <div style="max-width: 700px; margin: 2rem auto;">
+                <canvas id="userProgressChart" width="400" height="200"></canvas>
+            </div>
+
+            <script>
+                const ctx = document.getElementById('userProgressChart').getContext('2d');
+                const userProgressChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+                        datasets: [{
+                        label: 'Quiz Score (%)',
+                        data: [60, 70, 78, 85, 92],
+                        backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                        borderColor: '#007bff',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#007bff'
+                    }]
+                },
+
+                
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        },
+                        responsive: true
+                    }
+                });
+            </script>
+        </section>
+
+        <section class="section learner-progress">
+  <h2 class="modal-title">Learner Progress & Feedback</h2>
+  <p class="feedback-intro">Real-time insight into learner performance, powered by EDU AI.</p>
+
+  <div class="progress-chart-container">
+    <div class="progress-card">
+      <h4>Weekly Engagement</h4>
+      <canvas id="weeklyProgressChart"></canvas>
+    </div>
+
+    <div class="progress-card">
+      <h4>Performance Summary</h4>
+      <canvas id="overallScoreChart"></canvas>
+    </div>
+  </div>
+
+  <div class="feedback-grid">
+  <div class="testimonial-card">
+    <h4>Ali Raza <span class="role-badge role-student">Student</span></h4>
+    <p class="testimonial-text">"The daily progress graphs keep me motivated to study every day."</p>
+    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+  </div>
+
+  <div class="testimonial-card">
+    <h4>Mehak Javed <span class="role-badge role-student">Student</span></h4>
+    <p class="testimonial-text">"I love the AI feedback. It helps me fix my weak spots quickly."</p>
+    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+  </div>
+
+  <div class="testimonial-card">
+    <h4>Umer Shah <span class="role-badge role-student">Student</span></h4>
+    <p class="testimonial-text">"The dashboard shows me how much I've improved since last week!"</p>
+    <div class="testimonial-stars">⭐⭐⭐⭐</div>
+  </div>
+
+  <div class="testimonial-card">
+    <h4>Ms. Fatima <span class="role-badge role-student">Student</span></h4>
+    <p class="testimonial-text">"AI insights help me track which students need extra help—instantly!"</p>
+    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+  </div>
+
+  <div class="testimonial-card">
+    <h4>Mr. Junaid <span class="role-badge role-student">Student</span></h4>
+    <p class="testimonial-text">"This platform saves me hours each week on manual grading."</p>
+    <div class="testimonial-stars">⭐⭐⭐⭐</div>
+  </div>
+
+  <div class="testimonial-card">
+    <h4>Sara Malik <span class="role-badge role-student">Student</span></h4>
+    <p class="testimonial-text">"Real-time performance metrics make it easier to manage the whole system."</p>
+    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+  </div>
+</div>
+
+</section>
+
+
+
+      
+        <footer class="eduai-footer">
+            <div class="footer-container">
+                <div class="footer-section">
+                    <img src="images/EDU AI Logo Without Slogan.png" alt="EDU AI Logo" class="footer-logo">
+                    <p>WHERE EDUCATION MEETS INNOVATION</p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Explore</h4>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Sign Up</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <ul class="social-links">
+                        <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
+                        <li><a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+                        <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 EDU AI. Built with 💙 by Saad, Zain & Amir – BSSE | GIMS University</p>
+            </div>
+        </footer>
+        
+    <script>
+        function showForgotBox() {
+            document.getElementById('login-box').style.display = 'none';
+            document.getElementById('forgot-box').style.display = 'block';
+        }
+
+        function showLoginBox() {
+            document.getElementById('forgot-box').style.display = 'none';
+            document.getElementById('login-box').style.display = 'block';
+        }
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            if (username && password) {
+                alert(`Logging in as ${username}`);
+            }
+            else {
+                alert("Please enter both username and password.");
+            }
+        }
+
+        function resetPassword() {
+        const email = document.getElementById('email').value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailRegex.test(email)) {
+            alert(`Password reset link has been sent to ${email}`);
+            showLoginBox();
+            } 
+            else {
+                alert('Please enter a valid email address.');
+            }
+        }
+
+        const weeklyData = [2, 3.5, 4, 3, 5]; // example data
+  const overallScores = [90, 10]; // correct vs incorrect
+
+  new Chart(document.getElementById('weeklyProgressChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+      datasets: [{
+        label: 'Hours Studied',
+        data: weeklyData,
+        backgroundColor: '#007bff',
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true },
+        x: { ticks: { color: '#444' } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('overallScoreChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Correct', 'Incorrect'],
+      datasets: [{
+        data: overallScores,
+        backgroundColor: ['#00c6ff', '#eee'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+    </script>
+    </body>
+</html>

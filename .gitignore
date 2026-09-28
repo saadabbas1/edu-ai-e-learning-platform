@@ -1,0 +1,16 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Editors
+.vscode/
+.idea/
+.DS_Store
+
+# Dependencies
+vendor/
+
+# Runtime/generated files
+uploads/
+*.log

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Login | Edu AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="login_form.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="branding">
+    <img src="images/EDU AI Logo Without Slogan.png" alt="Edu AI Logo" class="logo" />
+    <p class="tagline">WHERE EDUCATION MEETS INNOVATION</p>
+  </div>
+
+  <div class="auth-box">
+    <p class="subtitle">Admin Access – Secure Login</p>
+
+    <form id="admin_login_form" novalidate>
+      <input type="email" id="email" placeholder="Email" required />
+      <span id="emailError" class="error-msg"></span>
+
+      <div class="password-group">
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="button" class="toggle-btn" onclick="togglePassword()"> 
+          <i class="fa-solid fa-eye"></i>
+        </button>
+      </div>
+      <span id="passwordError" class="error-msg"></span>
+
+      <a class="link" href="admin_forget_password.html">Forgotten Password?</a>
+
+      <button type="submit" class="button1">Login</button>
+    </form>
+  </div>
+
+  <script>
+function togglePassword() {
+  const input = document.getElementById("password");
+  const icon = document.querySelector(".toggle-btn i");
+  if (!input || !icon) return;
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.remove("fa-eye");
+    icon.classList.add("fa-eye-slash");
+  } else {
+    input.type = "password";
+    icon.classList.remove("fa-eye-slash");
+    icon.classList.add("fa-eye");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("admin_login_form");
+  const email = document.getElementById("email");
+  const password = document.getElementById("password");
+  const emailError = document.getElementById("emailError");
+  const passwordError = document.getElementById("passwordError");
+
+  // Optional: general error area (add a <p id="formError"></p> under the button if you want)
+  const formError = document.getElementById("formError");
+
+  // Debug area (optional but helpful). Add this div somewhere if you want to see raw server output:
+  // <pre id="debug" style="white-space:pre-wrap; font-size:12px; color:#b91c1c; display:none;"></pre>
+  const debug = document.getElementById("debug");
+
+  if (!form) return;
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // clear messages
+    emailError.textContent = "";
+    passwordError.textContent = "";
+    if (formError) formError.textContent = "";
+    if (debug) { debug.style.display = "none"; debug.textContent = ""; }
+
+    // simple validation
+    const eVal = (email?.value || "").trim();
+    const pVal = (password?.value || "").trim();
+    let ok = true;
+    if (!eVal) { emailError.textContent = "Email is required."; ok = false; }
+    else if (!/\S+@\S+\.\S+/.test(eVal)) { emailError.textContent = "Enter a valid email."; ok = false; }
+    if (!pVal) { passwordError.textContent = "Password is required."; ok = false; }
+    if (!ok) return;
+
+    // disable button
+    const btn = form.querySelector('button[type="submit"], .button1');
+    if (btn) btn.disabled = true;
+
+    try {
+      const fd = new FormData();
+      fd.append("email", eVal);
+      fd.append("password", pVal);
+
+      const res = await fetch("/edu_ai/admin_login.php", {
+        method: "POST",
+        body: fd,
+        credentials: "same-origin" // important for session cookies
+      });
+
+      // Try JSON first
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        // If not JSON, show raw response for debugging
+        const text = await res.text();
+        if (debug) { debug.style.display = "block"; debug.textContent = text; }
+        (formError || passwordError).textContent = "Server returned an unexpected response.";
+        return;
+      }
+
+      if (!data.ok) {
+        // show inline errors from server
+        if (data.errors?.email) emailError.textContent = data.errors.email;
+        if (data.errors?.password) passwordError.textContent = data.errors.password;
+        if (data.errors?._form && formError) formError.textContent = data.errors._form;
+        return;
+      }
+
+      // ✅ success → redirect (absolute path to avoid relative issues)
+      window.location.href = "/edu_ai/admin_dashboard.php";
+
+    } catch (err) {
+      (formError || passwordError).textContent = "Network error. Please try again.";
+      if (debug) { debug.style.display = "block"; debug.textContent = String(err); }
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  });
+});
+</script>
+
+</body>
+</html>

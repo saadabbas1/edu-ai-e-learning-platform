@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login | Edu AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="login_form.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="branding">
+    <img src="images/EDU AI Logo Without Slogan.png" alt="Edu AI Logo" class="logo" />
+    <p class="tagline">WHERE EDUCATION MEETS INNOVATION</p>
+  </div>
+
+  <div class="auth-box">
+    <p class="subtitle">Log in to continue learning with EDU AI</p>
+
+    <form id="login_form" novalidate>
+      <input type="email" id="email" name="email" placeholder="Email address" required />
+      <span id="emailError" class="error-msg"></span>
+
+      <div class="password-group">
+        <input type="password" id="password" name="password" placeholder="Password" required />
+        
+        <button type="button" class="toggle-btn" onclick="togglePassword()"> 
+          <i class="fa-solid fa-eye"></i>
+        </button>
+      </div>
+      <span id="passwordError" class="error-msg"></span>
+
+      <a class="link" href="forget_password.html">Forgotten Password?</a>
+
+      <p id="loginFormMessage" class="success-msg"></p>
+
+      <button type="submit" class="button1">Login</button>
+
+      <p class="footer-text">
+        Don't have an account? <a href="registration_form.html">Sign up</a>
+      </p>
+    </form>
+  </div>
+
+  <script>
+  function togglePassword() {
+    const input = document.getElementById("password");
+    const btn = document.querySelector(".toggle-btn");
+    const icon = btn.querySelector("i");
+
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.remove("fa-eye");
+      icon.classList.add("fa-eye-slash");
+    } else {
+      input.type = "password";
+      icon.classList.remove("fa-eye-slash");
+      icon.classList.add("fa-eye");
+    }
+  }
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("login_form");
+  const email = document.getElementById("email");
+  const password = document.getElementById("password");
+  const emailError = document.getElementById("emailError");
+  const passwordError = document.getElementById("passwordError");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    emailError.textContent = "";
+    passwordError.textContent = "";
+
+    const eVal = email.value.trim();
+    const pVal = password.value.trim();
+    if (!eVal) { emailError.textContent = "Email is required."; return; }
+    if (!/\S+@\S+\.\S+/.test(eVal)) { emailError.textContent = "Enter a valid email."; return; }
+    if (!pVal) { passwordError.textContent = "Password is required."; return; }
+
+    const fd = new FormData();
+    fd.append("email", eVal);
+    fd.append("password", pVal);
+
+    try {
+      const res  = await fetch("/edu_ai/login.php", { method: "POST", body: fd, credentials: "same-origin" });
+      const data = await res.json();
+
+      if (!data.ok) {
+        emailError.textContent    = data.errors?.email || "";
+        passwordError.textContent = data.errors?.password || data.errors?._form || "";
+        return;
+      }
+
+      // ✅ Use redirect decided by server (no guessing)
+      if (data.redirect) {
+        window.location.href = data.redirect;
+      } else {
+        // Fallback (shouldn't happen)
+        const role = (data.role || "").toLowerCase();
+        if (role === "admin")       window.location.href = "/edu_ai/admin_dashboard.php";
+        else if (role === "teacher")window.location.href = "/edu_ai/teacher_dashboard.php";
+        else                        window.location.href = "/edu_ai/student.php";
+      }
+
+    } catch (err) {
+      passwordError.textContent = "Network error. Please try again.";
+      console.error(err);
+    }
+  });
+});
+</script>
+
+</body>
+</html>

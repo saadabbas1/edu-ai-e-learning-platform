@@ -1,0 +1,18 @@
+[24-Oct-2025 22:40:04 Europe/Berlin] PHP Warning:  Undefined variable $dsn in C:\xampp\htdocs\edu_ai\db.php on line 15
+[24-Oct-2025 22:40:04 Europe/Berlin] PHP Warning:  Undefined variable $user in C:\xampp\htdocs\edu_ai\db.php on line 15
+[24-Oct-2025 22:40:04 Europe/Berlin] PHP Warning:  Undefined variable $pass in C:\xampp\htdocs\edu_ai\db.php on line 15
+[24-Oct-2025 22:40:04 Europe/Berlin] [save_quiz_history.php EXCEPTION] PDOException: PDO::__construct(): Argument #1 ($dsn) must be a valid data source name in C:\xampp\htdocs\edu_ai\db.php:15
+Stack trace:
+#0 C:\xampp\htdocs\edu_ai\db.php(15): PDO->__construct('', NULL, Object(SensitiveParameterValue), Array)
+#1 C:\xampp\htdocs\edu_ai\save_quiz_history.php(22): require_once('C:\\xampp\\htdocs...')
+#2 {main} | INPUT=
+[24-Oct-2025 22:40:04 Europe/Berlin] [save_quiz_history] Server error while saving quiz history. {"hint":"Check php-error.log on server"}
+[24-Oct-2025 22:49:14 Europe/Berlin] PHP Warning:  Undefined variable $dsn in C:\xampp\htdocs\edu_ai\db.php on line 15
+[24-Oct-2025 22:49:14 Europe/Berlin] PHP Warning:  Undefined variable $user in C:\xampp\htdocs\edu_ai\db.php on line 15
+[24-Oct-2025 22:49:14 Europe/Berlin] PHP Warning:  Undefined variable $pass in C:\xampp\htdocs\edu_ai\db.php on line 15
+[24-Oct-2025 22:49:14 Europe/Berlin] [save_quiz_history.php EXCEPTION] PDOException: PDO::__construct(): Argument #1 ($dsn) must be a valid data source name in C:\xampp\htdocs\edu_ai\db.php:15
+Stack trace:
+#0 C:\xampp\htdocs\edu_ai\db.php(15): PDO->__construct('', NULL, Object(SensitiveParameterValue), Array)
+#1 C:\xampp\htdocs\edu_ai\save_quiz_history.php(22): require_once('C:\\xampp\\htdocs...')
+#2 {main} | INPUT=
+[24-Oct-2025 22:49:14 Europe/Berlin] [save_quiz_history] Server error while saving quiz history. {"hint":"Check php-error.log on server"}

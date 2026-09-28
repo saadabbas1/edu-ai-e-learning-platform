@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>About Us – Edu AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="home_page.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .about-container {
+            max-width: 900px;
+            margin: 80px auto;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 0 25px rgba(0, 198, 255, 0.1);
+            color: #222;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .about-container h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 24px;
+            font-weight: 600;
+            background: linear-gradient(to right, #00c6ff, #007bff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .about-container p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .about-section {
+            margin-top: 32px;
+        }
+
+        .about-section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        .about-section ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        .about-section ul li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-left">
+            <img src="images/Book Logo.png" alt="Edu AI Logo" class="logo">
+            <span class="brand-name">Edu AI</span>
+        </div>
+        <nav class="nav-links" id="navMenu">
+                <a href="home_page.html">Home</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="#">About Us</a>
+                <a href="registration_form.html">Sign Up</a>
+                <a href="login_form.html">Log In</a>
+        </nav>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <div class="about-container">
+        <h2>About Edu AI</h2>
+        <p><strong>Edu AI</strong> is a smart educational platform that merges the power of artificial intelligence with intuitive user experiences. Our goal is to help learners grow at their own pace by providing customized learning paths, smart recommendations, and data-driven insights for teachers and administrators.</p>
+
+        <div class="about-section">
+            <h3>Our Mission</h3>
+            <p>To democratize high-quality education by using artificial intelligence to make learning more engaging, personalized, and effective for everyone, regardless of background or location.</p>
+        </div>
+
+        <div class="about-section">
+            <h3>Our Vision</h3>
+            <p>We envision a world where every learner has access to a smart educational assistant that helps them overcome challenges, unlock their potential, and succeed in their academic journey.</p>
+        </div>
+
+        <div class="about-section">
+            <h3>Why Choose Edu AI?</h3>
+            <ul>
+                <li>🤖 AI-driven recommendations tailored to student needs</li>
+                <li>📊 Real-time analytics for teachers and admins</li>
+                <li>🎯 Personalized learning paths for every student</li>
+                <li>🌐 Seamless access on desktop and mobile</li>
+            </ul>
+        </div>
+
+        <div class="about-section">
+            <h3>Core Values</h3>
+            <ul>
+                <li><strong>Innovation:</strong> We are driven by curiosity and the desire to push boundaries.</li>
+                <li><strong>Inclusion:</strong> We believe education should be accessible and inclusive to all.</li>
+                <li><strong>Impact:</strong> We focus on measurable results that make a difference in learning.</li>
+            </ul>
+        </div>
+
+        <div class="about-section">
+            <h3>Technologies We Use</h3>
+            <p>Our platform is built using the latest technologies, including:</p>
+            <ul>
+                <li>🧠 Natural Language Processing (NLP)</li>
+                <li>📚 Machine Learning for recommendations</li>
+                <li>🌐 Web technologies like HTML, CSS, JavaScript, and Python (Flask/Django)</li>
+                <li>☁️ Cloud-based infrastructure for scalability and security</li>
+            </ul>
+        </div>
+
+        <div class="about-section">
+            <h3>Meet the Team</h3>
+            <p>Edu AI was founded by a team of passionate developers, educators, and AI enthusiasts. We are dedicated to using technology to bridge learning gaps and enhance the educational experience for students and teachers alike.</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("navMenu");
+            menu.classList.toggle("active");
+        }
+    </script>
+</body>
+</html>

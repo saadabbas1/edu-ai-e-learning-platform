@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sign Up | Edu AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Your stylesheet -->
+  <link rel="stylesheet" href="registration_styles.css">
+
+  <!-- Inter + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Light, professional checklist styles -->
+  <style>
+    .pw-checklist{
+      margin:10px 0 0;
+      padding:10px 14px;
+      list-style:none;
+      border:0px solid #E5E7EB;       /* light gray border */
+      background:transparent;              /* very light background */
+      border-radius:10px;
+    }
+    .pw-checklist .rule{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:13px;
+      color:#6B7280;                   /* muted gray */
+      line-height:1.4;
+      padding:4px 6px;
+      border-radius:6px;
+      transition:background-color .25s ease,color .2s ease;
+    }
+    .pw-checklist .rule i{
+      font-size:12px;
+      color:#A3AAB2;                   /* light gray icon */
+      transition:color .2s ease, transform .15s ease;
+    }
+    .pw-checklist .rule.ok{
+      background:#ECFDF5;              /* light green highlight */
+      color:#065F46;                   /* deep green text */
+    }
+    .pw-checklist .rule.ok i{
+      color:#10B981;                   /* green icon */
+      transform:scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="branding">
+    <img src="images/EDU AI Logo Without Slogan.png" alt="Edu AI Logo" class="logo" />
+    <p class="tagline">WHERE EDUCATION MEETS INNOVATION</p>
+  </div>
+
+  <div class="auth-box">
+    <h2 class="form-title">Create Your Account</h2>
+    <p class="subtitle">Sign up to start learning with EDU AI</p>
+
+    <form id="signup_form" novalidate action="/edu_ai/signup.php" method="POST">
+      <input type="text" id="username" name="username" placeholder="Username" required />
+      <span id="usernameError" class="error-msg"></span>
+
+      <input type="email" id="email" name="email" placeholder="Email address" required />
+      <span id="emailError" class="error-msg"></span>
+
+      <!-- Password -->
+      <div class="password-group">
+        <input type="password" id="password" name="password" placeholder="Password" required />
+        <button type="button" class="toggle-btn" onclick="togglePassword('password', this)">
+          <i class="fa-solid fa-eye"></i>
+        </button>
+      </div>
+
+      <!-- Light professional checklist -->
+      <ul class="pw-checklist" aria-live="polite" aria-atomic="true">
+        <li id="rule-capital" class="rule">
+          <i class="fa-regular fa-circle"></i>
+          <span>Minimum one capital letter (A–Z)</span>
+        </li>
+        <li id="rule-number" class="rule">
+          <i class="fa-regular fa-circle"></i>
+          <span>Minimum one numeric digit (0–9)</span>
+        </li>
+        <li id="rule-length" class="rule">
+          <i class="fa-regular fa-circle"></i>
+          <span>Minimum 8 characters</span>
+        </li>
+      </ul>
+
+      <!-- Confirm Password -->
+      <div class="password-group">
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required />
+        <button type="button" class="toggle-btn" onclick="togglePassword('confirmPassword', this)">
+          <i class="fa-solid fa-eye"></i>
+        </button>
+      </div>
+      <span id="passwordMatch" class="info-msg"></span>
+
+      <!-- Interest -->
+      <select id="interest" name="interest" required>
+        <option value="" disabled selected>Select Interest</option>
+        <option value="programming_fundamentals">Programming Fundamentals</option>
+        <option value="oop">Object Oriented Programming</option>
+        <option value="data_structures">Data Structures and Analysis</option>
+        <option value="web">Web Development</option>
+        <option value="mobile">Mobile Application Development</option>
+        <option value="ai">Artificial Intelligence</option>
+      </select>
+      <span id="interestError" class="error-msg"></span>
+
+      <!-- Description (dynamic) -->
+      <select id="description" name="description" required>
+        <option value="" disabled selected>Select a Description</option>
+      </select>
+      <span id="descriptionError" class="error-msg"></span>
+
+      <!-- Study Level -->
+      <select id="studyLevel" name="studyLevel" required>
+        <option value="" disabled selected>Select Study Level</option>
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+      <span id="studyLevelError" class="error-msg"></span>
+
+      <p id="formMessage" class="success-msg"></p>
+
+      <button type="submit" class="button1">Sign Up</button>
+      <p class="footer-text1">
+        By clicking Sign Up, you agree to our <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>
+      </p>
+      <p class="footer-text2">
+        Already have an account? <a href="login_form.html">Log in</a>
+      </p>
+    </form>
+  </div>
+
+  <script>
+    // Auto-reload once every time page is opened
+if (!sessionStorage.getItem('signupReloaded')) {
+  sessionStorage.setItem('signupReloaded', 'true');
+  location.reload(true);
+} else {
+  sessionStorage.removeItem('signupReloaded');
+}
+
+    // Toggle eye icon
+    function togglePassword(fieldId, btn) {
+      const input = document.getElementById(fieldId);
+      const icon = btn.querySelector('i');
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = "password";
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    // ===== DOM Refs =====
+    const usernameInput        = document.getElementById("username");
+    const emailInput           = document.getElementById("email");
+    const passwordInput        = document.getElementById("password");
+    const confirmPasswordInput = document.getElementById("confirmPassword");
+    const interestSelect       = document.getElementById("interest");
+    const descriptionSelect    = document.getElementById("description");
+    const studyLevelSelect     = document.getElementById("studyLevel");
+
+    const usernameError   = document.getElementById("usernameError");
+    const emailError      = document.getElementById("emailError");
+    const passwordMatch   = document.getElementById("passwordMatch");
+    const interestError   = document.getElementById("interestError");
+    const descriptionError= document.getElementById("descriptionError");
+    const studyLevelError = document.getElementById("studyLevelError");
+    const formMessage     = document.getElementById("formMessage");
+
+      // ===== Auto-hide error on focus =====
+  usernameInput.addEventListener('focus', () => {
+    usernameError.textContent = '';
+  });
+  emailInput.addEventListener('focus', () => {
+    emailError.textContent = '';
+  });
+  passwordInput.addEventListener('focus', () => {
+    const pwErr = document.getElementById('passwordError');
+    if (pwErr) pwErr.textContent = '';
+  });
+  confirmPasswordInput.addEventListener('focus', () => {
+    passwordMatch.textContent = '';
+  });
+  interestSelect.addEventListener('focus', () => {
+    interestError.textContent = '';
+  });
+  descriptionSelect.addEventListener('focus', () => {
+    descriptionError.textContent = '';
+  });
+  studyLevelSelect.addEventListener('focus', () => {
+    studyLevelError.textContent = '';
+  });
+
+
+    // ===== Password checklist =====
+    function setRuleState(id, ok){
+      const li = document.getElementById(id);
+      if (!li) return;
+      const icon = li.querySelector('i');
+      if (ok){
+        li.classList.add('ok');
+        icon.classList.remove('fa-regular','fa-circle');
+        icon.classList.add('fa-solid','fa-circle-check');
+      } else {
+        li.classList.remove('ok');
+        icon.classList.remove('fa-solid','fa-circle-check');
+        icon.classList.add('fa-regular','fa-circle');
+      }
+    }
+    function updatePasswordChecklist(){
+      const v = passwordInput.value || '';
+      setRuleState('rule-capital', /[A-Z]/.test(v));
+      setRuleState('rule-number',  /\d/.test(v));
+      setRuleState('rule-length',  v.length >= 8);
+    }
+    document.addEventListener('DOMContentLoaded', updatePasswordChecklist);
+    passwordInput.addEventListener('input', updatePasswordChecklist);
+
+    // Confirm password live message
+    function updateConfirm(){
+      if (!confirmPasswordInput.value){
+        passwordMatch.textContent = '';
+        return;
+      }
+      if (confirmPasswordInput.value === passwordInput.value){
+        passwordMatch.textContent = 'Passwords match';
+        passwordMatch.style.color = 'green';
+      } else {
+        passwordMatch.textContent = 'Passwords do not match';
+        passwordMatch.style.color = 'red';
+      }
+    }
+    confirmPasswordInput.addEventListener('input', updateConfirm);
+    passwordInput.addEventListener('input', updateConfirm);
+
+    // ===== Description data (keys) =====
+    const interestDescriptions = {
+      programming_fundamentals: [
+        { value: "Variables", text: "Variables" },
+        { value: "Functions", text: "Functions" },
+        { value: "Data Types", text: "Data Types" },
+        { value: "Data Structure", text: "Data Structure" },
+        { value: "Syntax", text: "Syntax" },
+        { value: "Arrays", text: "Arrays" },
+        { value: "Comment", text: "Comment" },
+        { value: "Loops", text: "Loops" },
+        { value: "Control Flow", text: "Control Flow" }
+      ],
+      oop: [
+        { value: "OOP Concepts", text: "OOP Concepts (Encapsulation, Inheritance)" },
+        { value: "Design Patterns", text: "Design Patterns" },
+        { value: "Project-based Learning", text: "Project-based Learning" }
+      ],
+      data_structures: [
+        { value: "Algorithm Analysis", text: "Algorithm Analysis" },
+        { value: "Data Types and Structures", text: "Data Types and Structures" },
+        { value: "Real-life Applications", text: "Real-life Applications" }
+      ],
+      web: [
+        { value: "Frontend Development (HTML, CSS, JS)", text: "Frontend Development (HTML, CSS, JS)" },
+        { value: "Backend Logic & Databases", text: "Backend Logic & Databases" },
+        { value: "Full-Stack Projects", text: "Full-Stack Projects" }
+      ],
+      mobile: [
+        { value: "Android App Development", text: "Android App Development" },
+        { value: "iOS App Development", text: "iOS App Development" },
+        { value: "Cross-platform with Flutter", text: "Cross-platform with Flutter" }
+      ],
+      ai: [
+        { value: "Introduction to AI", text: "Introduction to AI" },
+        { value: "Machine Learning Basics", text: "Machine Learning Basics" },
+        { value: "Deep Learning and Neural Networks", text: "Deep Learning and Neural Networks" }
+      ]
+    };
+
+    // Fill Description based on Interest value (value is already a key like "web", "ai")
+    function populateDescriptions(){
+      const key = interestSelect.value; // e.g. "web"
+      descriptionSelect.innerHTML = '<option value="" disabled selected>Select a Description</option>';
+      if (!key || !interestDescriptions[key]) return;
+      interestDescriptions[key].forEach(opt => {
+        const o = document.createElement('option');
+        o.value = opt.text;      // store full readable text in DB
+        o.textContent = opt.text;
+        descriptionSelect.appendChild(o);
+      });
+    }
+    document.addEventListener('DOMContentLoaded', populateDescriptions);
+    interestSelect.addEventListener('change', populateDescriptions);
+  </script>
+
+  <script>
+  // Helper: clear all error spans
+  function clearErrors() {
+    usernameError.textContent = '';
+    emailError.textContent = '';
+    passwordMatch.textContent = '';
+    interestError.textContent = '';
+    descriptionError.textContent = '';
+    studyLevelError.textContent = '';
+    const pwErr = document.getElementById('passwordError');
+    if (pwErr) pwErr.textContent = '';
+    formMessage.textContent = '';
+    formMessage.style.color = '';
+  }
+
+  // Add a small password error span (under the first password field) if not present
+  (function ensurePasswordErrorSpan(){
+    if (!document.getElementById('passwordError')) {
+      const span = document.createElement('span');
+      span.id = 'passwordError';
+      span.className = 'error-msg';
+      const pwGroup = document.querySelector('.password-group');
+      pwGroup.insertAdjacentElement('afterend', span);
+    }
+  })();
+
+  // AJAX submit so messages stay on the same page
+  document.getElementById('signup_form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    clearErrors();
+
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+
+    try {
+      const res = await fetch('/edu_ai/signup.php', {
+        method: 'POST',
+        body: new FormData(this)
+      });
+
+      const data = await res.json();
+
+      if (!data.ok) {
+        // Field-level errors
+        const err = data.errors || {};
+        if (err.username)        usernameError.textContent    = err.username;
+        if (err.email)           emailError.textContent       = err.email;
+        if (err.password)        document.getElementById('passwordError').textContent = err.password;
+        if (err.confirmPassword) { passwordMatch.textContent = err.confirmPassword; passwordMatch.style.color = 'red'; }
+        if (err.interest)        interestError.textContent    = err.interest;
+        if (err.description)     descriptionError.textContent = err.description;
+        if (err.studyLevel)      studyLevelError.textContent  = err.studyLevel;
+        if (err._form) { formMessage.textContent = err._form; formMessage.style.color = 'red'; }
+        submitBtn.disabled = false;
+        return;
+      }
+
+      // Success message inside the form
+      formMessage.textContent = data.message || 'Signup successful!';
+      formMessage.style.color = 'green';
+
+      // Open login_form.html after a short pause (ensures you see the message)
+      setTimeout(() => {
+        // Use absolute path so it always resolves
+        window.location.href = '/edu_ai/login_form.html';
+      }, 1500);
+
+    } catch (err) {
+      formMessage.textContent = 'Network error. Please try again.';
+      formMessage.style.color = 'red';
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>

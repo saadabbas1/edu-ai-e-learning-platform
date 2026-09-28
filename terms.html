@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terms & Conditions – Edu AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home_page.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .policy-container {
+            max-width: 900px;
+            margin: 80px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0, 198, 255, 0.1);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .policy-container h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #00c6ff, #007bff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .policy-container h3 {
+            margin-top: 20px;
+            font-size: 1.3rem;
+            color: #007bff;
+        }
+
+        .policy-container p {
+            margin: 10px 0;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-left">
+            <img src="images/Book Logo.png" alt="Edu AI Logo" class="logo">
+            <span class="brand-name">Edu AI</span>
+        </div>
+        <nav class="nav-links" id="navMenu">
+            <a href="contact.html">Contact Us</a>
+            <a href="about.html">About Us</a>
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="registration_form.html">Sign Up</a>
+        </nav>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <div class="policy-container">
+        <h2>Terms and Conditions</h2>
+        <p>Welcome to Edu AI. These terms and conditions outline the rules and regulations for the use of our website and services.</p>
+
+        <h3>1. Acceptance of Terms</h3>
+        <p>By accessing this website, you accept these terms and conditions in full. If you disagree with any part, you must not use our website.</p>
+
+        <h3>2. Use License</h3>
+        <p>Permission is granted to temporarily download one copy of the materials for personal, non-commercial use only.</p>
+
+        <h3>3. Disclaimer</h3>
+        <p>The materials on Edu AI’s website are provided "as is". We make no warranties, expressed or implied.</p>
+
+        <h3>4. Limitations</h3>
+        <p>In no event shall Edu AI or its suppliers be liable for any damages arising out of the use or inability to use the materials.</p>
+
+        <h3>5. Modifications</h3>
+        <p>Edu AI may revise these terms at any time without notice. By using this site, you agree to be bound by the then-current version.</p>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("navMenu");
+            menu.classList.toggle("active");
+        }
+    </script>
+</body>
+</html>
